@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -6,17 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>성적 추가</title>
 
-    <!-- Bootstrap 5 CSS 연결 -->
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet">
 
-    <!-- 내가 직접 만든 CSS 연결 -->
     <link rel="stylesheet" href="my.css">
 </head>
 <body>
 
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="index.html">성적 관리</a>
@@ -41,19 +37,13 @@
 
         <h1 class="page-title">성적 추가</h1>
 
-        <!-- ================================
-             Form 영역
-             id="addForm" : JavaScript에서 이 Form을 찾기 위한 이름표
-        ================================= -->
         <form id="addForm">
-
-            <!-- row, col-md-6 : Desktop에서는 2열, Mobile에서는 1열로 보이게 해준다 -->
             <div class="row">
 
-                <!-- 왼쪽 열 -->
                 <div class="col-md-6 mb-3">
                     <label for="idInput" class="form-label">번호</label>
-                    <input type="number" class="form-control" id="idInput" required>
+                    <!-- readonly : 번호는 자동으로 채워지고 사용자가 직접 바꾸지 못하게 함 -->
+                    <input type="number" class="form-control" id="idInput" readonly>
                 </div>
 
                 <div class="col-md-6 mb-3">
@@ -75,7 +65,6 @@
                     </select>
                 </div>
 
-                <!-- 오른쪽 열 -->
                 <div class="col-md-6 mb-3">
                     <label for="creditInput" class="form-label">학점수</label>
                     <select class="form-select" id="creditInput" required>
@@ -109,7 +98,6 @@
 
             </div>
 
-            <!-- 버튼 영역 -->
             <button type="button" class="btn btn-primary" onclick="checkAndAdd()">추가하기</button>
             <a href="index.html" class="btn btn-secondary">취소</a>
 
@@ -121,18 +109,49 @@
         © 2026 성적 관리 프로그램 - 웹프로그래밍 과제
     </div>
 
-    <!-- Bootstrap JavaScript Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- ================================
-         JavaScript Validation
-         function : 하나의 동작을 묶어놓은 코드 덩어리
-    ================================= -->
     <script>
+
+        var defaultGrades = [
+            { id: 1, subject: "웹프로그래밍", professor: "홍길동", category: "전공", credit: 3, gradeType: "GRADE", semester: "2026-2" },
+            { id: 2, subject: "자료구조",     professor: "김교수", category: "전공", credit: 3, gradeType: "GRADE", semester: "2026-1" },
+            { id: 3, subject: "대학영어",     professor: "이교수", category: "교양", credit: 2, gradeType: "GRADE", semester: "2026-1" },
+            { id: 4, subject: "컴퓨터개론",   professor: "박교수", category: "전공", credit: 3, gradeType: "PF",    semester: "2025-2" },
+            { id: 5, subject: "심리학개론",   professor: "최교수", category: "교양", credit: 2, gradeType: "GRADE", semester: "2025-2" },
+            { id: 6, subject: "데이터베이스", professor: "정교수", category: "전공", credit: 3, gradeType: "GRADE", semester: "2026-2" }
+        ];
+
+        function getGrades() {
+            var data = localStorage.getItem("grades");
+            if (data === null) {
+                saveGrades(defaultGrades);
+                return defaultGrades;
+            }
+            return JSON.parse(data);
+        }
+
+        function saveGrades(grades) {
+            localStorage.setItem("grades", JSON.stringify(grades));
+        }
+
+        // 페이지가 열리면 다음 번호(id)를 자동으로 계산해서 넣어준다
+        function setNextId() {
+            var grades = getGrades();
+            var nextId = 1;
+
+            for (var i = 0; i < grades.length; i++) {
+                if (grades[i].id >= nextId) {
+                    nextId = grades[i].id + 1;
+                }
+            }
+
+            document.getElementById("idInput").value = nextId;
+        }
 
         function checkAndAdd() {
 
-            // input과 select에서 사용자가 입력한 값을 가져온다
+            var id = document.getElementById("idInput").value;
             var subject = document.getElementById("subjectInput").value;
             var professor = document.getElementById("professorInput").value;
             var category = document.getElementById("categoryInput").value;
@@ -158,27 +177,48 @@
                 return;
             }
 
-            // Validation 4 : 학점이 올바른지 확인
+            // Validation 4 : 학점이 선택되었는지 확인
             if (credit === "") {
                 alert("학점수를 선택해주세요.");
                 return;
             }
 
-            // Validation 5 : 수강 학기가 선택되었는지 확인
+            // Validation 5 : GRADE/PF가 선택되었는지 확인
+            if (gradeType === "") {
+                alert("GRADE/PF를 선택해주세요.");
+                return;
+            }
+
+            // Validation 6 : 수강 학기가 선택되었는지 확인
             if (semester === "") {
                 alert("수강 학기를 선택해주세요.");
                 return;
             }
 
-            // 모든 입력이 정상일 때 확인창을 띄운다
             var isOk = confirm("과목이 추가됩니다.");
 
-            // 사용자가 확인 버튼을 눌렀을 때만 실행
             if (isOk) {
+                var grades = getGrades();
+
+                var newGrade = {
+                    id: Number(id),
+                    subject: subject,
+                    professor: professor,
+                    category: category,
+                    credit: Number(credit),
+                    gradeType: gradeType,
+                    semester: semester
+                };
+
+                grades.push(newGrade);
+                saveGrades(grades);
+
                 alert("과목이 추가되었습니다.");
                 location.href = "index.html";
             }
         }
+
+        setNextId();
 
     </script>
 

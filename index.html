@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -6,33 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>성적 관리 프로그램</title>
 
-    <!-- Bootstrap 5 CSS 연결 (CDN 방식) -->
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet">
 
-    <!-- 내가 직접 만든 CSS 연결 -->
     <link rel="stylesheet" href="my.css">
 </head>
 <body>
 
-    <!-- ================================
-         Navbar (상단 네비게이션 바)
-         navbar, navbar-expand-lg : 화면 크기에 따라
-         메뉴가 접히거나 펼쳐지는 반응형 Navbar
-    ================================= -->
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <!-- 사이트 이름 -->
             <a class="navbar-brand" href="index.html">성적 관리</a>
-
-            <!-- 모바일 화면에서 보이는 햄버거 버튼 -->
             <button class="navbar-toggler" type="button"
                 data-bs-toggle="collapse" data-bs-target="#navbarMenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-            <!-- 메뉴 목록 -->
             <div class="collapse navbar-collapse" id="navbarMenu">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
@@ -46,29 +34,14 @@
         </div>
     </nav>
 
-    <!-- ================================
-         container : 좌우 여백을 자동으로 만들어주는
-         Bootstrap의 기본 레이아웃 박스
-    ================================= -->
     <div class="container">
 
-        <!-- 메인 제목 -->
         <h1 class="page-title">성적 관리 프로그램</h1>
-
-        <!-- 간단한 설명 -->
         <p class="page-description">수강 과목과 성적을 한눈에 관리하세요.</p>
 
-        <!-- 과목 추가 버튼 -->
         <a href="add.html" class="btn btn-primary mb-3">+ 과목 추가</a>
 
-        <!-- ================================
-             table-responsive : 화면이 좁아지면
-             표를 좌우로 스크롤할 수 있게 해준다.
-        ================================= -->
         <div class="table-responsive">
-
-            <!-- table, table-striped(줄무늬), table-hover(마우스 효과),
-                 table-bordered(테두리) : Bootstrap 표 스타일 -->
             <table class="table table-striped table-hover table-bordered">
                 <thead class="table-dark">
                     <tr>
@@ -81,75 +54,79 @@
                         <th>학기</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- 과목명을 클릭하면 view.html로 이동한다 -->
-                    <tr>
-                        <td>1</td>
-                        <td><a href="view.html">웹프로그래밍</a></td>
-                        <td>홍길동</td>
-                        <td>전공</td>
-                        <td>3</td>
-                        <td>GRADE</td>
-                        <td>2026-2</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td><a href="view.html">자료구조</a></td>
-                        <td>김교수</td>
-                        <td>전공</td>
-                        <td>3</td>
-                        <td>GRADE</td>
-                        <td>2026-1</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td><a href="view.html">대학영어</a></td>
-                        <td>이교수</td>
-                        <td>교양</td>
-                        <td>2</td>
-                        <td>GRADE</td>
-                        <td>2026-1</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td><a href="view.html">컴퓨터개론</a></td>
-                        <td>박교수</td>
-                        <td>전공</td>
-                        <td>3</td>
-                        <td>PF</td>
-                        <td>2025-2</td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td><a href="view.html">심리학개론</a></td>
-                        <td>최교수</td>
-                        <td>교양</td>
-                        <td>2</td>
-                        <td>GRADE</td>
-                        <td>2025-2</td>
-                    </tr>
-                    <tr>
-                        <td>6</td>
-                        <td><a href="view.html">데이터베이스</a></td>
-                        <td>정교수</td>
-                        <td>전공</td>
-                        <td>3</td>
-                        <td>GRADE</td>
-                        <td>2026-2</td>
-                    </tr>
+                <!-- 표 내용은 JavaScript가 채워준다. 처음에는 비어있다. -->
+                <tbody id="gradeTableBody">
                 </tbody>
             </table>
         </div>
 
     </div>
 
-    <!-- Footer 영역 -->
     <div class="footer">
         © 2026 성적 관리 프로그램 - 웹프로그래밍 과제
     </div>
 
-    <!-- Bootstrap JavaScript Bundle (Navbar 메뉴 작동을 위해 필요) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+
+        // localStorage에 데이터가 하나도 없을 때 사용할 기본 예시 데이터
+        var defaultGrades = [
+            { id: 1, subject: "웹프로그래밍", professor: "홍길동", category: "전공", credit: 3, gradeType: "GRADE", semester: "2026-2" },
+            { id: 2, subject: "자료구조",     professor: "김교수", category: "전공", credit: 3, gradeType: "GRADE", semester: "2026-1" },
+            { id: 3, subject: "대학영어",     professor: "이교수", category: "교양", credit: 2, gradeType: "GRADE", semester: "2026-1" },
+            { id: 4, subject: "컴퓨터개론",   professor: "박교수", category: "전공", credit: 3, gradeType: "PF",    semester: "2025-2" },
+            { id: 5, subject: "심리학개론",   professor: "최교수", category: "교양", credit: 2, gradeType: "GRADE", semester: "2025-2" },
+            { id: 6, subject: "데이터베이스", professor: "정교수", category: "전공", credit: 3, gradeType: "GRADE", semester: "2026-2" }
+        ];
+
+        // localStorage에서 성적 데이터를 가져오는 함수
+        function getGrades() {
+            var data = localStorage.getItem("grades");
+
+            // 저장된 데이터가 없으면 기본 데이터를 저장하고 반환한다
+            if (data === null) {
+                saveGrades(defaultGrades);
+                return defaultGrades;
+            }
+
+            // JSON 문자열을 다시 배열로 바꿔서 반환한다
+            return JSON.parse(data);
+        }
+
+        // 배열을 localStorage에 저장하는 함수
+        function saveGrades(grades) {
+            localStorage.setItem("grades", JSON.stringify(grades));
+        }
+
+        // 화면에 표를 그리는 함수
+        function showGradeList() {
+            var grades = getGrades();
+            var tbody = document.getElementById("gradeTableBody");
+
+            var html = "";
+
+            for (var i = 0; i < grades.length; i++) {
+                var g = grades[i];
+
+                html += "<tr>";
+                html += "<td>" + g.id + "</td>";
+                html += "<td><a href='view.html?id=" + g.id + "'>" + g.subject + "</a></td>";
+                html += "<td>" + g.professor + "</td>";
+                html += "<td>" + g.category + "</td>";
+                html += "<td>" + g.credit + "</td>";
+                html += "<td>" + g.gradeType + "</td>";
+                html += "<td>" + g.semester + "</td>";
+                html += "</tr>";
+            }
+
+            tbody.innerHTML = html;
+        }
+
+        // 페이지가 열리면 바로 표를 그린다
+        showGradeList();
+
+    </script>
 
 </body>
 </html>

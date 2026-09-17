@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -6,17 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>성적 상세 정보</title>
 
-    <!-- Bootstrap 5 CSS 연결 -->
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet">
 
-    <!-- 내가 직접 만든 CSS 연결 -->
     <link rel="stylesheet" href="my.css">
 </head>
 <body>
 
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="index.html">성적 관리</a>
@@ -41,30 +37,23 @@
 
         <h1 class="page-title">성적 상세 정보</h1>
 
-        <!-- ================================
-             Bootstrap Card : 하나의 정보 묶음을 보여줄 때 사용하는 박스
-        ================================= -->
         <div class="card">
 
-            <!-- 카드 제목 부분 -->
-            <div class="card-header">
-                웹프로그래밍
-            </div>
+            <!-- 과목명은 JavaScript가 채워준다 -->
+            <div class="card-header" id="cardTitle"></div>
 
-            <!-- 카드 내용 부분 -->
             <div class="card-body">
 
-                <!-- 7개의 Field를 모두 표시 -->
-                <p><strong>번호:</strong> 1</p>
-                <p><strong>과목명:</strong> 웹프로그래밍</p>
-                <p><strong>교수님:</strong> 홍길동</p>
-                <p><strong>전공/교양:</strong> 전공</p>
-                <p><strong>학점수:</strong> 3</p>
-                <p><strong>GRADE/PF:</strong> GRADE</p>
-                <p><strong>수강 학기:</strong> 2026-2</p>
+                <p><strong>번호:</strong> <span id="idText"></span></p>
+                <p><strong>과목명:</strong> <span id="subjectText"></span></p>
+                <p><strong>교수님:</strong> <span id="professorText"></span></p>
+                <p><strong>전공/교양:</strong> <span id="categoryText"></span></p>
+                <p><strong>학점수:</strong> <span id="creditText"></span></p>
+                <p><strong>GRADE/PF:</strong> <span id="gradeTypeText"></span></p>
+                <p><strong>수강 학기:</strong> <span id="semesterText"></span></p>
 
-                <!-- 버튼 영역 -->
-                <a href="edit.html" class="btn btn-warning">수정</a>
+                <!-- 수정 버튼은 id에 맞는 edit.html 주소로 JavaScript가 연결해준다 -->
+                <a href="#" id="editLink" class="btn btn-warning">수정</a>
                 <button type="button" class="btn btn-danger" onclick="deleteGrade()">삭제</button>
                 <a href="index.html" class="btn btn-secondary">목록으로</a>
 
@@ -77,23 +66,94 @@
         © 2026 성적 관리 프로그램 - 웹프로그래밍 과제
     </div>
 
-    <!-- Bootstrap JavaScript Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- JavaScript : 삭제 버튼 동작 -->
     <script>
 
-        function deleteGrade() {
+        var defaultGrades = [
+            { id: 1, subject: "웹프로그래밍", professor: "홍길동", category: "전공", credit: 3, gradeType: "GRADE", semester: "2026-2" },
+            { id: 2, subject: "자료구조",     professor: "김교수", category: "전공", credit: 3, gradeType: "GRADE", semester: "2026-1" },
+            { id: 3, subject: "대학영어",     professor: "이교수", category: "교양", credit: 2, gradeType: "GRADE", semester: "2026-1" },
+            { id: 4, subject: "컴퓨터개론",   professor: "박교수", category: "전공", credit: 3, gradeType: "PF",    semester: "2025-2" },
+            { id: 5, subject: "심리학개론",   professor: "최교수", category: "교양", credit: 2, gradeType: "GRADE", semester: "2025-2" },
+            { id: 6, subject: "데이터베이스", professor: "정교수", category: "전공", credit: 3, gradeType: "GRADE", semester: "2026-2" }
+        ];
 
-            // confirm() : 사용자에게 확인을 받는 창
+        function getGrades() {
+            var data = localStorage.getItem("grades");
+            if (data === null) {
+                saveGrades(defaultGrades);
+                return defaultGrades;
+            }
+            return JSON.parse(data);
+        }
+
+        function saveGrades(grades) {
+            localStorage.setItem("grades", JSON.stringify(grades));
+        }
+
+        // 주소 뒤에 붙은 ?id=숫자 값을 읽어오는 함수
+        function getIdFromUrl() {
+            var params = new URLSearchParams(window.location.search);
+            return Number(params.get("id"));
+        }
+
+        // 화면에 상세 정보를 채워 넣는 함수
+        function showGradeDetail() {
+            var id = getIdFromUrl();
+            var grades = getGrades();
+            var found = null;
+
+            for (var i = 0; i < grades.length; i++) {
+                if (grades[i].id === id) {
+                    found = grades[i];
+                    break;
+                }
+            }
+
+            // 해당 id의 데이터를 찾지 못한 경우
+            if (found === null) {
+                alert("해당 과목을 찾을 수 없습니다.");
+                location.href = "index.html";
+                return;
+            }
+
+            document.getElementById("cardTitle").innerText = found.subject;
+            document.getElementById("idText").innerText = found.id;
+            document.getElementById("subjectText").innerText = found.subject;
+            document.getElementById("professorText").innerText = found.professor;
+            document.getElementById("categoryText").innerText = found.category;
+            document.getElementById("creditText").innerText = found.credit;
+            document.getElementById("gradeTypeText").innerText = found.gradeType;
+            document.getElementById("semesterText").innerText = found.semester;
+
+            // 수정 버튼이 이 과목의 edit 페이지로 가도록 주소를 연결
+            document.getElementById("editLink").href = "edit.html?id=" + found.id;
+        }
+
+        function deleteGrade() {
             var isOk = confirm("이 과목을 삭제하시겠습니까?");
 
-            // 사용자가 확인을 눌렀을 때만 실행
             if (isOk) {
+                var id = getIdFromUrl();
+                var grades = getGrades();
+                var newGrades = [];
+
+                // 삭제할 id와 다른 것들만 새 배열에 담는다
+                for (var i = 0; i < grades.length; i++) {
+                    if (grades[i].id !== id) {
+                        newGrades.push(grades[i]);
+                    }
+                }
+
+                saveGrades(newGrades);
+
                 alert("삭제되었습니다.");
                 location.href = "index.html";
             }
         }
+
+        showGradeDetail();
 
     </script>
 
