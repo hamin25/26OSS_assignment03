@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>성적 추가</title>
+
+    <!-- Bootstrap 5 CSS 연결 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- 내가 직접 만든 CSS 연결 -->
+    <link rel="stylesheet" href="my.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">성적 관리</a>
+            <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navbarMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarMenu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">성적 목록</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="add.html">성적 추가</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container form-area">
+
+        <h1 class="page-title">성적 추가</h1>
+
+        <!-- ================================
+             Form 영역
+             id="addForm" : JavaScript에서 이 Form을 찾기 위한 이름표
+        ================================= -->
+        <form id="addForm">
+
+            <!-- row, col-md-6 : Desktop에서는 2열, Mobile에서는 1열로 보이게 해준다 -->
+            <div class="row">
+
+                <!-- 왼쪽 열 -->
+                <div class="col-md-6 mb-3">
+                    <label for="idInput" class="form-label">번호</label>
+                    <input type="number" class="form-control" id="idInput" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="subjectInput" class="form-label">과목명</label>
+                    <input type="text" class="form-control" id="subjectInput" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="professorInput" class="form-label">교수님</label>
+                    <input type="text" class="form-control" id="professorInput" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="categoryInput" class="form-label">전공/교양</label>
+                    <select class="form-select" id="categoryInput" required>
+                        <option value="">선택하세요</option>
+                        <option value="전공">전공</option>
+                        <option value="교양">교양</option>
+                    </select>
+                </div>
+
+                <!-- 오른쪽 열 -->
+                <div class="col-md-6 mb-3">
+                    <label for="creditInput" class="form-label">학점수</label>
+                    <select class="form-select" id="creditInput" required>
+                        <option value="">선택하세요</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="gradeTypeInput" class="form-label">GRADE/PF</label>
+                    <select class="form-select" id="gradeTypeInput" required>
+                        <option value="">선택하세요</option>
+                        <option value="GRADE">GRADE</option>
+                        <option value="PF">PF</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="semesterInput" class="form-label">수강 학기</label>
+                    <select class="form-select" id="semesterInput" required>
+                        <option value="">선택하세요</option>
+                        <option value="2025-1">2025-1</option>
+                        <option value="2025-2">2025-2</option>
+                        <option value="2026-1">2026-1</option>
+                        <option value="2026-2">2026-2</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <!-- 버튼 영역 -->
+            <button type="button" class="btn btn-primary" onclick="checkAndAdd()">추가하기</button>
+            <a href="index.html" class="btn btn-secondary">취소</a>
+
+        </form>
+
+    </div>
+
+    <div class="footer">
+        © 2026 성적 관리 프로그램 - 웹프로그래밍 과제
+    </div>
+
+    <!-- Bootstrap JavaScript Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- ================================
+         JavaScript Validation
+         function : 하나의 동작을 묶어놓은 코드 덩어리
+    ================================= -->
+    <script>
+
+        function checkAndAdd() {
+
+            // input과 select에서 사용자가 입력한 값을 가져온다
+            var subject = document.getElementById("subjectInput").value;
+            var professor = document.getElementById("professorInput").value;
+            var category = document.getElementById("categoryInput").value;
+            var credit = document.getElementById("creditInput").value;
+            var gradeType = document.getElementById("gradeTypeInput").value;
+            var semester = document.getElementById("semesterInput").value;
+
+            // Validation 1 : 과목명이 비어 있는지 확인
+            if (subject === "") {
+                alert("과목명을 입력해주세요.");
+                return;
+            }
+
+            // Validation 2 : 교수님이 비어 있는지 확인
+            if (professor === "") {
+                alert("교수님 이름을 입력해주세요.");
+                return;
+            }
+
+            // Validation 3 : 전공/교양이 선택되었는지 확인
+            if (category === "") {
+                alert("전공/교양을 선택해주세요.");
+                return;
+            }
+
+            // Validation 4 : 학점이 올바른지 확인
+            if (credit === "") {
+                alert("학점수를 선택해주세요.");
+                return;
+            }
+
+            // Validation 5 : 수강 학기가 선택되었는지 확인
+            if (semester === "") {
+                alert("수강 학기를 선택해주세요.");
+                return;
+            }
+
+            // 모든 입력이 정상일 때 확인창을 띄운다
+            var isOk = confirm("과목이 추가됩니다.");
+
+            // 사용자가 확인 버튼을 눌렀을 때만 실행
+            if (isOk) {
+                alert("과목이 추가되었습니다.");
+                location.href = "index.html";
+            }
+        }
+
+    </script>
+
+</body>
+</html>

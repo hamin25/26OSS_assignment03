@@ -1,0 +1,95 @@
+/* ============================================
+   my.css - 성적 관리 프로그램 공통 CSS
+   Bootstrap이 기본 디자인을 담당하고,
+   여기서는 내가 직접 원하는 부분만 조금씩 꾸며준다.
+============================================ */
+
+/* 전체 배경색을 살짝 회색빛으로 지정 */
+body {
+    background-color: #f5f6f8;
+}
+
+/* 페이지 제목(예: "성적 관리 프로그램") 스타일 */
+.page-title {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* 페이지 제목 아래 설명 문구 스타일 */
+.page-description {
+    margin-bottom: 30px;
+    color: #666666;
+}
+
+/* Navbar 글자에 약간의 여백을 준다 */
+.navbar-brand {
+    font-weight: bold;
+    padding-left: 5px;
+}
+
+/* Table 안의 글자를 가운데 정렬 */
+.table th,
+.table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Table 안에서 과목명 링크의 색상 지정 */
+.table a {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+/* 과목명 링크에 마우스를 올렸을 때 밑줄 표시 */
+.table a:hover {
+    text-decoration: underline;
+}
+
+/* Card 전체에 약간의 여백과 그림자 효과 */
+.card {
+    margin-top: 30px;
+    border: 1px solid #dddddd;
+}
+
+/* Card 제목 부분 배경색 */
+.card-header {
+    background-color: #e9ecef;
+    font-weight: bold;
+}
+
+/* 버튼 사이에 약간의 간격을 준다 */
+.btn {
+    margin-right: 5px;
+}
+
+/* Form 전체 영역에 위쪽 여백을 준다 */
+.form-area {
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+
+/* label 글자를 조금 진하게 */
+label {
+    font-weight: 500;
+}
+
+/* Footer 영역 스타일 */
+.footer {
+    margin-top: 60px;
+    padding: 20px 0;
+    text-align: center;
+    color: #888888;
+    border-top: 1px solid #dddddd;
+}
+
+/* ============================================
+   Media Query (아주 간단한 예시 하나만 사용)
+   화면 너비가 576px보다 작을 때 (휴대폰 화면)
+   페이지 제목의 글자 크기를 조금 줄여준다.
+============================================ */
+@media (max-width: 576px) {
+    .page-title {
+        font-size: 1.5rem;
+    }
+}
